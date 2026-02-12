@@ -1,0 +1,302 @@
+[
+  {
+    "title": "Future Leaders Scholarship",
+    "organization": "National Education Foundation",
+    "amount": 5000,
+    "deadline": "2026-06-30T23:59:59Z",
+    "description": "Supporting students who demonstrate leadership potential and academic excellence. Open to high school seniors and current college students pursuing any field of study.",
+    "eligibilityRequirements": {
+      "minGPA": 3.5,
+      "academicStanding": ["High School Senior", "Undergraduate"],
+      "majors": [],
+      "states": [],
+      "citizenshipRequired": true,
+      "essayRequired": true,
+      "recommendationsRequired": 2
+    },
+    "applicationUrl": "https://example.com/future-leaders",
+    "tags": ["Leadership", "General", "Academic Excellence"],
+    "essayPrompts": [
+      {
+        "prompt": "Describe a time when you demonstrated leadership in your community or school. What impact did your actions have?",
+        "wordLimit": 500,
+        "required": true
+      }
+    ]
+  },
+  {
+    "title": "STEM Excellence Award",
+    "organization": "Technology Innovation Council",
+    "amount": 10000,
+    "deadline": "2026-07-15T23:59:59Z",
+    "description": "Recognizing outstanding students pursuing degrees in Science, Technology, Engineering, or Mathematics. Preference given to underrepresented minorities in STEM fields.",
+    "eligibilityRequirements": {
+      "minGPA": 3.7,
+      "academicStanding": ["Undergraduate", "Graduate"],
+      "majors": ["Computer Science", "Engineering", "Mathematics", "Physics", "Chemistry", "Biology"],
+      "states": [],
+      "citizenshipRequired": true,
+      "essayRequired": true,
+      "recommendationsRequired": 1
+    },
+    "applicationUrl": "https://example.com/stem-excellence",
+    "tags": ["STEM", "Technology", "Science", "Engineering"],
+    "essayPrompts": [
+      {
+        "prompt": "How do you plan to use your STEM education to make a positive impact on society?",
+        "wordLimit": 750,
+        "required": true
+      }
+    ]
+  },
+  {
+    "title": "Community Service Champion",
+    "organization": "Volunteers of America",
+    "amount": 3000,
+    "deadline": "2026-05-31T23:59:59Z",
+    "description": "Awarded to students who have made significant contributions to their communities through volunteer work and service projects.",
+    "eligibilityRequirements": {
+      "minGPA": 3.0,
+      "academicStanding": ["High School Senior", "Undergraduate"],
+      "majors": [],
+      "states": [],
+      "citizenshipRequired": false,
+      "essayRequired": true,
+      "recommendationsRequired": 2
+    },
+    "applicationUrl": "https://example.com/community-service",
+    "tags": ["Community Service", "Volunteer", "Social Impact"],
+    "essayPrompts": [
+      {
+        "prompt": "Describe your most meaningful volunteer experience and what you learned from it.",
+        "wordLimit": 600,
+        "required": true
+      }
+    ]
+  },
+  {
+    "title": "First Generation Scholars Program",
+    "organization": "Higher Education Access Foundation",
+    "amount": 7500,
+    "deadline": "2026-08-01T23:59:59Z",
+    "description": "Supporting first-generation college students in achieving their educational goals. Must be the first in your immediate family to attend college.",
+    "eligibilityRequirements": {
+      "minGPA": 3.2,
+      "academicStanding": ["High School Senior", "Undergraduate"],
+      "majors": [],
+      "states": [],
+      "citizenshipRequired": true,
+      "essayRequired": true,
+      "recommendationsRequired": 1
+    },
+    "applicationUrl": "https://example.com/first-gen",
+    "tags": ["First Generation", "Access", "Opportunity"],
+    "essayPrompts": [
+      {
+        "prompt": "As a first-generation college student, what challenges have you faced and how have you overcome them?",
+        "wordLimit": 650,
+        "required": true
+      }
+    ]
+  },
+  {
+    "title": "Business Leaders of Tomorrow",
+    "organization": "National Business Association",
+    "amount": 8000,
+    "deadline": "2026-06-15T23:59:59Z",
+    "description": "For students pursuing business, entrepreneurship, or economics degrees who demonstrate innovative thinking and business acumen.",
+    "eligibilityRequirements": {
+      "minGPA": 3.6,
+      "academicStanding": ["Undergraduate", "Graduate"],
+      "majors": ["Business Administration", "Economics", "Finance", "Marketing", "Entrepreneurship"],
+      "states": [],
+      "citizenshipRequired": true,
+      "essayRequired": true,
+      "recommendationsRequired": 2
+    },
+    "applicationUrl": "https://example.com/business-leaders",
+    "tags": ["Business", "Entrepreneurship", "Leadership"],
+    "essayPrompts": [
+      {
+        "prompt": "Describe a business idea or innovation you've developed. How would you bring it to market?",
+        "wordLimit": 800,
+        "required": true
+      }
+    ]
+  },
+  {
+    "title": "Arts & Creativity Scholarship",
+    "organization": "Creative Arts Foundation",
+    "amount": 4000,
+    "deadline": "2026-07-31T23:59:59Z",
+    "description": "Supporting students pursuing degrees in visual arts, performing arts, music, theater, or creative writing.",
+    "eligibilityRequirements": {
+      "minGPA": 3.0,
+      "academicStanding": ["High School Senior", "Undergraduate"],
+      "majors": ["Art", "Music", "Theater", "Dance", "Creative Writing", "Film"],
+      "states": [],
+      "citizenshipRequired": false,
+      "essayRequired": true,
+      "recommendationsRequired": 1
+    },
+    "applicationUrl": "https://example.com/arts-creativity",
+    "tags": ["Arts", "Creativity", "Performance"],
+    "essayPrompts": [
+      {
+        "prompt": "How has art or creative expression shaped your identity and worldview?",
+        "wordLimit": 500,
+        "required": true
+      }
+    ]
+  },
+  {
+    "title": "Healthcare Heroes Scholarship",
+    "organization": "Medical Professionals Alliance",
+    "amount": 12000,
+    "deadline": "2026-09-01T23:59:59Z",
+    "description": "For students pursuing careers in healthcare, including nursing, medicine, pharmacy, public health, and allied health professions.",
+    "eligibilityRequirements": {
+      "minGPA": 3.5,
+      "academicStanding": ["Undergraduate", "Graduate"],
+      "majors": ["Nursing", "Medicine", "Pre-Med", "Public Health", "Pharmacy", "Physical Therapy"],
+      "states": [],
+      "citizenshipRequired": true,
+      "essayRequired": true,
+      "recommendationsRequired": 2
+    },
+    "applicationUrl": "https://example.com/healthcare-heroes",
+    "tags": ["Healthcare", "Medicine", "Nursing", "Public Health"],
+    "essayPrompts": [
+      {
+        "prompt": "Why do you want to pursue a career in healthcare, and what unique perspective will you bring to the field?",
+        "wordLimit": 700,
+        "required": true
+      }
+    ]
+  },
+  {
+    "title": "Environmental Sustainability Award",
+    "organization": "Green Future Initiative",
+    "amount": 6000,
+    "deadline": "2026-08-15T23:59:59Z",
+    "description": "Recognizing students committed to environmental conservation, sustainability, and climate action.",
+    "eligibilityRequirements": {
+      "minGPA": 3.3,
+      "academicStanding": ["High School Senior", "Undergraduate", "Graduate"],
+      "majors": ["Environmental Science", "Sustainability", "Conservation", "Ecology"],
+      "states": [],
+      "citizenshipRequired": false,
+      "essayRequired": true,
+      "recommendationsRequired": 1
+    },
+    "applicationUrl": "https://example.com/environmental",
+    "tags": ["Environment", "Sustainability", "Climate", "Conservation"],
+    "essayPrompts": [
+      {
+        "prompt": "Describe an environmental challenge in your community and propose a solution.",
+        "wordLimit": 600,
+        "required": true
+      }
+    ]
+  },
+  {
+    "title": "Women in Tech Scholarship",
+    "organization": "Tech Diversity Coalition",
+    "amount": 9000,
+    "deadline": "2026-06-30T23:59:59Z",
+    "description": "Supporting women pursuing technology careers and addressing the gender gap in the tech industry.",
+    "eligibilityRequirements": {
+      "minGPA": 3.4,
+      "academicStanding": ["Undergraduate", "Graduate"],
+      "majors": ["Computer Science", "Information Technology", "Software Engineering", "Data Science"],
+      "states": [],
+      "citizenshipRequired": false,
+      "essayRequired": true,
+      "recommendationsRequired": 1
+    },
+    "applicationUrl": "https://example.com/women-in-tech",
+    "tags": ["Technology", "Women", "Diversity", "STEM"],
+    "essayPrompts": [
+      {
+        "prompt": "What challenges have you faced as a woman in technology, and how have you overcome them?",
+        "wordLimit": 650,
+        "required": true
+      }
+    ]
+  },
+  {
+    "title": "Military Family Scholarship",
+    "organization": "Veterans Support Network",
+    "amount": 5500,
+    "deadline": "2026-07-01T23:59:59Z",
+    "description": "For children and spouses of active duty military members, veterans, or fallen service members.",
+    "eligibilityRequirements": {
+      "minGPA": 3.0,
+      "academicStanding": ["High School Senior", "Undergraduate"],
+      "majors": [],
+      "states": [],
+      "citizenshipRequired": true,
+      "essayRequired": true,
+      "recommendationsRequired": 1
+    },
+    "applicationUrl": "https://example.com/military-family",
+    "tags": ["Military", "Veterans", "Family Support"],
+    "essayPrompts": [
+      {
+        "prompt": "How has your military family experience shaped your values and educational goals?",
+        "wordLimit": 550,
+        "required": true
+      }
+    ]
+  },
+  {
+    "title": "Journalism & Media Excellence",
+    "organization": "Press Freedom Foundation",
+    "amount": 4500,
+    "deadline": "2026-08-31T23:59:59Z",
+    "description": "For aspiring journalists, media professionals, and communications students committed to truth and ethical reporting.",
+    "eligibilityRequirements": {
+      "minGPA": 3.4,
+      "academicStanding": ["Undergraduate", "Graduate"],
+      "majors": ["Journalism", "Communications", "Media Studies", "Broadcasting"],
+      "states": [],
+      "citizenshipRequired": false,
+      "essayRequired": true,
+      "recommendationsRequired": 2
+    },
+    "applicationUrl": "https://example.com/journalism",
+    "tags": ["Journalism", "Media", "Communications"],
+    "essayPrompts": [
+      {
+        "prompt": "In an era of misinformation, what role do you believe journalists should play in society?",
+        "wordLimit": 700,
+        "required": true
+      }
+    ]
+  },
+  {
+    "title": "Education Innovators Award",
+    "organization": "Future Educators Alliance",
+    "amount": 6500,
+    "deadline": "2026-09-15T23:59:59Z",
+    "description": "Supporting future teachers and education professionals who are passionate about transforming education.",
+    "eligibilityRequirements": {
+      "minGPA": 3.3,
+      "academicStanding": ["Undergraduate", "Graduate"],
+      "majors": ["Education", "Teaching", "Early Childhood Education", "Special Education"],
+      "states": [],
+      "citizenshipRequired": true,
+      "essayRequired": true,
+      "recommendationsRequired": 2
+    },
+    "applicationUrl": "https://example.com/education",
+    "tags": ["Education", "Teaching", "Innovation"],
+    "essayPrompts": [
+      {
+        "prompt": "Describe an innovative teaching method or educational approach you would like to implement in your future classroom.",
+        "wordLimit": 600,
+        "required": true
+      }
+    ]
+  }
+]
