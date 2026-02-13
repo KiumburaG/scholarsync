@@ -23,7 +23,6 @@ export const typeDefs = `#graphql
     zip: String
     country: String
     currentSchool: String
-    schoolType: String
     expectedGraduation: String
     major: String
     minor: String
@@ -33,15 +32,13 @@ export const typeDefs = `#graphql
     ethnicity: String
     gender: String
     firstGeneration: Boolean
-    militaryStatus: String
-    financialNeedIndicator: String
     background: String
     challenges: String
     academicJourney: String
     careerGoals: String
     whyEducation: String
     personalValues: String
-    profileStrengthScore: Int
+    profileStrength: Int
     createdAt: String!
     updatedAt: String!
     activities: [Activity!]!
@@ -58,7 +55,6 @@ export const typeDefs = `#graphql
     endDate: String
     isCurrent: Boolean!
     hoursPerWeek: Int
-    totalHours: Int
     achievements: [String!]!
     createdAt: String!
     updatedAt: String!
