@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -35,7 +35,7 @@ interface Props {
 export function BasicInfoStep({ data, updateData, onNext, buttonText = 'Next: Academic Info' }: Props) {
   const [error, setError] = useState('');
 
-  const { register, handleSubmit, formState: { errors } } = useForm<BasicInfoFormData>({
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<BasicInfoFormData>({
     resolver: zodResolver(basicInfoSchema),
     defaultValues: {
       firstName: data.firstName || '',
@@ -49,6 +49,21 @@ export function BasicInfoStep({ data, updateData, onNext, buttonText = 'Next: Ac
       country: data.country || 'United States',
     },
   });
+
+  // Reset form with new data when data prop changes
+  useEffect(() => {
+    reset({
+      firstName: data.firstName || '',
+      lastName: data.lastName || '',
+      phone: data.phone || '',
+      dateOfBirth: data.dateOfBirth || '',
+      streetAddress: data.streetAddress || '',
+      city: data.city || '',
+      state: data.state || '',
+      zip: data.zip || '',
+      country: data.country || 'United States',
+    });
+  }, [data, reset]);
 
   const [updateProfile, { loading }] = useMutation(UPDATE_PROFILE_MUTATION, {
     onCompleted: () => {

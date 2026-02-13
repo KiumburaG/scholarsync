@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -35,7 +35,7 @@ export function AcademicInfoStep({ data, updateData, onNext, onBack, buttonText 
   const [error, setError] = useState('');
   const [academicStanding, setAcademicStanding] = useState(data.academicStanding || '');
 
-  const { register, handleSubmit, formState: { errors } } = useForm<AcademicInfoFormData>({
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<AcademicInfoFormData>({
     resolver: zodResolver(academicInfoSchema),
     defaultValues: {
       currentSchool: data.currentSchool || '',
@@ -46,6 +46,19 @@ export function AcademicInfoStep({ data, updateData, onNext, onBack, buttonText 
       academicStanding: data.academicStanding || '',
     },
   });
+
+  // Reset form with new data when data prop changes
+  useEffect(() => {
+    reset({
+      currentSchool: data.currentSchool || '',
+      major: data.major || '',
+      minor: data.minor || '',
+      gpa: data.gpa || undefined,
+      expectedGraduation: data.expectedGraduation || '',
+      academicStanding: data.academicStanding || '',
+    });
+    setAcademicStanding(data.academicStanding || '');
+  }, [data, reset]);
 
   const [updateProfile, { loading }] = useMutation(UPDATE_PROFILE_MUTATION, {
     onCompleted: () => {
