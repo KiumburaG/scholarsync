@@ -296,7 +296,6 @@ export const typeDefs = `#graphql
     endDate: DateTime
     isCurrent: Boolean
     hoursPerWeek: Int
-    totalHours: Int
     achievements: [String!]
   }
 
@@ -309,7 +308,6 @@ export const typeDefs = `#graphql
     endDate: DateTime
     isCurrent: Boolean
     hoursPerWeek: Int
-    totalHours: Int
     achievements: [String!]
   }
 

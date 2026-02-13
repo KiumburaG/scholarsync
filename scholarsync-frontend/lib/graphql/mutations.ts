@@ -111,7 +111,6 @@ export const UPDATE_ACTIVITY_MUTATION = gql`
       endDate
       isCurrent
       hoursPerWeek
-      totalHours
       achievements
       updatedAt
     }

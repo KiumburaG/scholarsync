@@ -60,6 +60,10 @@ export function ExperiencesStep({ data, updateData, onNext, onBack, buttonText =
       setEditingId(null);
       setShowAddForm(false);
       resetForm();
+      // Trigger success callback to show toast notification
+      if (onNext) {
+        onNext();
+      }
     },
     onError: (error) => {
       setError(error.message);
