@@ -1,10 +1,14 @@
 export const typeDefs = `#graphql
+  # Custom Scalars
+  scalar DateTime
+  scalar JSON
+
   # User Authentication
   type User {
     id: ID!
     email: String!
-    createdAt: String!
-    updatedAt: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
     emailVerified: Boolean!
     profileCompleted: Boolean!
     profile: UserProfile
@@ -16,14 +20,14 @@ export const typeDefs = `#graphql
     firstName: String
     lastName: String
     phone: String
-    dateOfBirth: String
+    dateOfBirth: DateTime
     streetAddress: String
     city: String
     state: String
     zip: String
     country: String
     currentSchool: String
-    expectedGraduation: String
+    expectedGraduation: DateTime
     major: String
     minor: String
     gpa: Float
@@ -39,8 +43,8 @@ export const typeDefs = `#graphql
     whyEducation: String
     personalValues: String
     profileStrength: Int
-    createdAt: String!
-    updatedAt: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
     activities: [Activity!]!
   }
 
@@ -51,13 +55,13 @@ export const typeDefs = `#graphql
     organization: String
     role: String
     description: String
-    startDate: String
-    endDate: String
+    startDate: DateTime
+    endDate: DateTime
     isCurrent: Boolean!
     hoursPerWeek: Int
     achievements: [String!]!
-    createdAt: String!
-    updatedAt: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
   }
 
   type AuthPayload {
@@ -80,8 +84,8 @@ export const typeDefs = `#graphql
     qualityScore: Int
     wordCount: Int
     userRating: Int
-    createdAt: String!
-    updatedAt: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
   }
 
   type EssayVariant {
@@ -106,7 +110,7 @@ export const typeDefs = `#graphql
     title: String!
     organization: String!
     amount: Float!
-    deadline: String!
+    deadline: DateTime!
     description: String!
     eligibilityRequirements: JSON!
     applicationUrl: String!
@@ -114,8 +118,8 @@ export const typeDefs = `#graphql
     essayPrompts: [EssayPrompt!]!
     isActive: Boolean!
     source: String
-    createdAt: String!
-    updatedAt: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
   }
 
   type EssayPrompt {
@@ -141,8 +145,6 @@ export const typeDefs = `#graphql
     missingRequirements: [String!]!
   }
 
-  scalar JSON
-
   # Application Types
   type Application {
     id: ID!
@@ -150,14 +152,14 @@ export const typeDefs = `#graphql
     scholarshipId: ID!
     scholarship: Scholarship
     status: String!
-    deadline: String
-    submittedAt: String
+    deadline: DateTime
+    submittedAt: DateTime
     notes: String
     progressPercentage: Int!
     amountAwarded: Float
-    outcomeNotificationDate: String
-    createdAt: String!
-    updatedAt: String!
+    outcomeNotificationDate: DateTime
+    createdAt: DateTime!
+    updatedAt: DateTime!
     essays: [Essay!]!
     documents: [Document!]!
   }
@@ -169,7 +171,7 @@ export const typeDefs = `#graphql
     name: String!
     type: String!
     url: String!
-    uploadedAt: String!
+    uploadedAt: DateTime!
   }
 
   type ApplicationStats {
@@ -226,13 +228,13 @@ export const typeDefs = `#graphql
     mostActiveDayCount: Int!
     currentStreak: Int!
     longestStreak: Int!
-    lastActivityDate: String
+    lastActivityDate: DateTime
   }
 
   type DeadlineItem {
     applicationId: ID!
     scholarshipTitle: String!
-    deadline: String!
+    deadline: DateTime!
     daysRemaining: Int!
     progressPercentage: Int!
     status: String!
@@ -258,7 +260,7 @@ export const typeDefs = `#graphql
     firstName: String
     lastName: String
     phone: String
-    dateOfBirth: String
+    dateOfBirth: DateTime
     streetAddress: String
     city: String
     state: String
@@ -266,7 +268,7 @@ export const typeDefs = `#graphql
     country: String
     currentSchool: String
     schoolType: String
-    expectedGraduation: String
+    expectedGraduation: DateTime
     major: String
     minor: String
     gpa: Float
@@ -290,8 +292,8 @@ export const typeDefs = `#graphql
     organization: String
     role: String
     description: String
-    startDate: String
-    endDate: String
+    startDate: DateTime
+    endDate: DateTime
     isCurrent: Boolean
     hoursPerWeek: Int
     totalHours: Int
@@ -303,8 +305,8 @@ export const typeDefs = `#graphql
     organization: String
     role: String
     description: String
-    startDate: String
-    endDate: String
+    startDate: DateTime
+    endDate: DateTime
     isCurrent: Boolean
     hoursPerWeek: Int
     totalHours: Int
@@ -321,12 +323,12 @@ export const typeDefs = `#graphql
 
   input UpdateApplicationInput {
     status: String
-    deadline: String
-    submittedAt: String
+    deadline: DateTime
+    submittedAt: DateTime
     notes: String
     progressPercentage: Int
     amountAwarded: Float
-    outcomeNotificationDate: String
+    outcomeNotificationDate: DateTime
   }
 
   input AddDocumentInput {

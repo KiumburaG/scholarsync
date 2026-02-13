@@ -247,4 +247,30 @@ export const resolvers = {
       return null;
     },
   }),
+
+  // Custom scalar for Date - serialize as ISO string
+  DateTime: new GraphQLScalarType({
+    name: 'DateTime',
+    description: 'DateTime custom scalar type',
+    serialize(value: any) {
+      // Convert Date objects to ISO strings
+      if (value instanceof Date) {
+        return value.toISOString();
+      }
+      return value;
+    },
+    parseValue(value: any) {
+      // Parse incoming strings to Date objects
+      if (typeof value === 'string') {
+        return new Date(value);
+      }
+      return value;
+    },
+    parseLiteral(ast) {
+      if (ast.kind === Kind.STRING) {
+        return new Date(ast.value);
+      }
+      return null;
+    },
+  }),
 };

@@ -52,6 +52,12 @@ export function BasicInfoStep({ data, updateData, onNext, buttonText = 'Next: Ac
 
   // Reset form with new data when data prop changes
   useEffect(() => {
+    console.log('BasicInfoStep: Resetting form with data:', {
+      dateOfBirth: data.dateOfBirth,
+      firstName: data.firstName,
+      lastName: data.lastName
+    });
+
     reset({
       firstName: data.firstName || '',
       lastName: data.lastName || '',
