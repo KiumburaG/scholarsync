@@ -103,7 +103,7 @@ export const profileResolvers = {
         where: { userId: context.userId },
         data: {
           ...data,
-          profileStrengthScore: profileStrength,
+          profileStrength: profileStrength,
         },
         include: {
           activities: true,

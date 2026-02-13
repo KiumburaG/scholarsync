@@ -53,7 +53,7 @@ export const activityResolvers = {
 
         await prisma.userProfile.update({
           where: { userId: context.userId },
-          data: { profileStrengthScore: profileStrength },
+          data: { profileStrength: profileStrength },
         });
       }
 
@@ -129,7 +129,7 @@ export const activityResolvers = {
 
         await prisma.userProfile.update({
           where: { userId: context.userId },
-          data: { profileStrengthScore: profileStrength },
+          data: { profileStrength: profileStrength },
         });
       }
 
@@ -182,7 +182,7 @@ export const activityResolvers = {
 
         await prisma.userProfile.update({
           where: { userId: context.userId },
-          data: { profileStrengthScore: profileStrength },
+          data: { profileStrength: profileStrength },
         });
       }
 

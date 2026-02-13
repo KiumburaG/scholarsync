@@ -14,11 +14,16 @@ datasource db {
 // ============================================
 
 model User {
-  id            String   @id @default(uuid())
-  email         String   @unique
-  passwordHash  String   @map("password_hash")
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+  id               String   @id @default(uuid())
+  email            String   @unique
+  passwordHash     String   @map("password_hash")
+  emailVerified    Boolean  @default(false) @map("email_verified")
+  profileCompleted Boolean  @default(false) @map("profile_completed")
+  termsAccepted    Boolean  @default(false) @map("terms_accepted")
+  termsAcceptedAt  DateTime? @map("terms_accepted_at")
+  lastLogin        DateTime? @map("last_login")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
 
   // Relations
   profile       UserProfile?
@@ -47,12 +52,13 @@ model UserProfile {
   country       String? @default("United States")
 
   // Academic Info
-  currentSchool     String?  @map("current_school")
-  graduationYear    Int?     @map("graduation_year")
-  major             String?
-  minor             String?
-  gpa               Float?
-  academicStanding  String?  @map("academic_standing")
+  currentSchool        String?   @map("current_school")
+  graduationYear       Int?      @map("graduation_year")
+  expectedGraduation   DateTime? @map("expected_graduation")
+  major                String?
+  minor                String?
+  gpa                  Float?
+  academicStanding     String?   @map("academic_standing")
 
   // Demographics
   citizenship     String?
@@ -237,4 +243,19 @@ model MatchScore {
 
   @@unique([userId, scholarshipId])
   @@map("match_scores")
+}
+
+// ============================================
+// ACCESS LOGS
+// ============================================
+
+model AccessLog {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  action       String
+  resourceType String   @map("resource_type")
+  resourceId   String   @map("resource_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("access_logs")
 }
