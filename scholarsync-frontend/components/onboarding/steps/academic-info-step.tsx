@@ -72,11 +72,20 @@ export function AcademicInfoStep({ data, updateData, onNext, onBack, buttonText 
   const onSubmit = (formData: AcademicInfoFormData) => {
     setError('');
     const dataWithStanding = { ...formData, academicStanding };
-    updateData(dataWithStanding);
+
+    // Filter out empty strings to prevent overwriting with null values
+    const cleanedData = Object.entries(dataWithStanding).reduce((acc, [key, value]) => {
+      if (value !== '' && value !== null && value !== undefined) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {} as any);
+
+    updateData(cleanedData);
 
     updateProfile({
       variables: {
-        input: dataWithStanding,
+        input: cleanedData,
       },
     });
   };

@@ -76,11 +76,20 @@ export function BasicInfoStep({ data, updateData, onNext, buttonText = 'Next: Ac
 
   const onSubmit = (formData: BasicInfoFormData) => {
     setError('');
-    updateData(formData);
+
+    // Filter out empty strings to prevent overwriting with null values
+    const cleanedData = Object.entries(formData).reduce((acc, [key, value]) => {
+      if (value !== '' && value !== null && value !== undefined) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {} as any);
+
+    updateData(cleanedData);
 
     updateProfile({
       variables: {
-        input: formData,
+        input: cleanedData,
       },
     });
   };

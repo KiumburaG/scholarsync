@@ -75,19 +75,31 @@ export const profileResolvers = {
         throw new Error(validation.errors.join(', '));
       }
 
+      // Filter out empty strings and convert date strings to Date objects
+      const data: any = {};
+
+      // Copy non-empty values from input
+      Object.entries(input).forEach(([key, value]) => {
+        if (value !== '' && value !== null && value !== undefined) {
+          data[key] = value;
+        }
+      });
+
       // Convert date strings to Date objects if provided
-      const data: any = { ...input };
-      if (input.dateOfBirth) {
-        data.dateOfBirth = new Date(input.dateOfBirth);
+      if (data.dateOfBirth) {
+        data.dateOfBirth = new Date(data.dateOfBirth);
       }
-      if (input.expectedGraduation) {
-        data.expectedGraduation = new Date(input.expectedGraduation);
+      if (data.expectedGraduation) {
+        data.expectedGraduation = new Date(data.expectedGraduation);
       }
 
       // Get current profile to calculate strength
       const currentProfile = await prisma.userProfile.findUnique({
         where: { userId: context.userId },
-        include: { activities: true },
+        include: {
+          activities: true,
+          user: true,
+        },
       });
 
       if (!currentProfile) {
