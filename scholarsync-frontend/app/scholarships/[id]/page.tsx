@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client/react';
 import { SCHOLARSHIP_MATCH_QUERY } from '@/lib/graphql/queries';
 import { CREATE_APPLICATION_MUTATION } from '@/lib/graphql/mutations';
 import Link from 'next/link';

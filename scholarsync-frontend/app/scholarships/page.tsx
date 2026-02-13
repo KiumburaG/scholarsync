@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import { MATCHED_SCHOLARSHIPS_QUERY, SCHOLARSHIP_TAGS_QUERY } from '@/lib/graphql/queries';
 import Link from 'next/link';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import {
   APPLICATION_TIMELINE_QUERY,
   SUCCESS_ANALYTICS_QUERY,
