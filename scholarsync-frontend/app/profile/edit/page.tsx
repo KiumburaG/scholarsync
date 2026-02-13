@@ -19,6 +19,7 @@ export default function EditProfilePage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>('basic');
   const [profileData, setProfileData] = useState<any>({});
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   const { data, loading } = useQuery(MY_PROFILE_QUERY);
 
@@ -30,11 +31,42 @@ export default function EditProfilePage() {
 
   useEffect(() => {
     if (data?.myProfile) {
-      setProfileData(data.myProfile);
+      const profile = data.myProfile;
+      // Convert data to match the format expected by components
+      const formattedData = {
+        firstName: profile.firstName || '',
+        lastName: profile.lastName || '',
+        phone: profile.phone || '',
+        dateOfBirth: profile.dateOfBirth || '',
+        streetAddress: profile.streetAddress || '',
+        city: profile.city || '',
+        state: profile.state || '',
+        zip: profile.zip || '',
+        country: profile.country || 'United States',
+        currentSchool: profile.currentSchool || '',
+        expectedGraduation: profile.expectedGraduation || '',
+        major: profile.major || '',
+        minor: profile.minor || '',
+        gpa: profile.gpa || undefined,
+        academicStanding: profile.academicStanding || '',
+        citizenship: profile.citizenship || '',
+        ethnicity: profile.ethnicity || '',
+        gender: profile.gender || '',
+        firstGeneration: profile.firstGeneration || false,
+        background: profile.background || '',
+        challenges: profile.challenges || '',
+        academicJourney: profile.academicJourney || '',
+        careerGoals: profile.careerGoals || '',
+        whyEducation: profile.whyEducation || '',
+        personalValues: profile.personalValues || '',
+        activities: profile.activities || [],
+      };
+      setProfileData(formattedData);
+      setDataLoaded(true);
     }
   }, [data]);
 
-  if (loading) {
+  if (loading || !dataLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-gray-600">Loading your profile...</p>
@@ -54,29 +86,32 @@ export default function EditProfilePage() {
     setProfileData({ ...profileData, ...newData });
   };
 
-  const handleSaveAndClose = () => {
-    router.push('/dashboard');
+  const handleSave = () => {
+    // Data is already saved by the individual step components
+    // Stay on the same tab after saving
   };
 
   const renderTabContent = () => {
     const commonProps = {
       data: profileData,
       updateData,
-      onNext: handleSaveAndClose,
+      onNext: handleSave,
       onBack: () => router.push('/dashboard'),
     };
 
+    // Use key prop with activeTab to force remount when switching tabs
+    // This ensures fresh data is loaded in forms
     switch (activeTab) {
       case 'basic':
-        return <BasicInfoStep {...commonProps} />;
+        return <BasicInfoStep key={`basic-${JSON.stringify(profileData)}`} {...commonProps} />;
       case 'academic':
-        return <AcademicInfoStep {...commonProps} />;
+        return <AcademicInfoStep key={`academic-${JSON.stringify(profileData)}`} {...commonProps} />;
       case 'experiences':
-        return <ExperiencesStep {...commonProps} />;
+        return <ExperiencesStep key={`experiences-${JSON.stringify(profileData)}`} {...commonProps} />;
       case 'narrative':
-        return <NarrativeStep {...commonProps} />;
+        return <NarrativeStep key={`narrative-${JSON.stringify(profileData)}`} {...commonProps} />;
       case 'preferences':
-        return <PreferencesStep {...commonProps} />;
+        return <PreferencesStep key={`preferences-${JSON.stringify(profileData)}`} {...commonProps} />;
       default:
         return null;
     }
