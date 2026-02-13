@@ -11,7 +11,7 @@ export const ME_QUERY = gql`
         id
         firstName
         lastName
-        profileStrengthScore
+        profileStrength
       }
     }
   }
@@ -32,7 +32,6 @@ export const MY_PROFILE_QUERY = gql`
       zip
       country
       currentSchool
-      schoolType
       expectedGraduation
       major
       minor
@@ -42,15 +41,13 @@ export const MY_PROFILE_QUERY = gql`
       ethnicity
       gender
       firstGeneration
-      militaryStatus
-      financialNeedIndicator
       background
       challenges
       academicJourney
       careerGoals
       whyEducation
       personalValues
-      profileStrengthScore
+      profileStrength
       createdAt
       updatedAt
       activities {
@@ -63,7 +60,6 @@ export const MY_PROFILE_QUERY = gql`
         endDate
         isCurrent
         hoursPerWeek
-        totalHours
         achievements
       }
     }
@@ -82,7 +78,6 @@ export const MY_ACTIVITIES_QUERY = gql`
       endDate
       isCurrent
       hoursPerWeek
-      totalHours
       achievements
       createdAt
       updatedAt

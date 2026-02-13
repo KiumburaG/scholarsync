@@ -45,7 +45,7 @@ export default function DashboardPage() {
   }
 
   const profile = data?.myProfile;
-  const profileStrength = profile?.profileStrengthScore || 0;
+  const profileStrength = profile?.profileStrength || 0;
   const firstName = profile?.firstName || 'there';
   const stats = statsData?.applicationStats;
 
@@ -76,10 +76,20 @@ export default function DashboardPage() {
           {/* Profile Strength Card */}
           <Card>
             <CardHeader>
-              <CardTitle>Profile Strength</CardTitle>
-              <CardDescription>
-                Your profile is {profileStrength}% complete
-              </CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Profile Strength</CardTitle>
+                  <CardDescription>
+                    Your profile is {profileStrength}% complete
+                  </CardDescription>
+                </div>
+                <Button
+                  variant="outline"
+                  onClick={() => router.push('/profile/edit')}
+                >
+                  Edit Profile
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <Progress value={profileStrength} className="h-3 mb-2" />
