@@ -1,0 +1,426 @@
+// Prisma Schema for ScholarSync
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER AUTHENTICATION & PROFILES
+// ============================================
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash  String   @map("password_hash")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  emailVerified Boolean  @default(false) @map("email_verified")
+  profileCompleted Boolean @default(false) @map("profile_completed")
+  lastLogin     DateTime? @map("last_login")
+
+  // Metadata
+  termsAccepted    Boolean @default(false) @map("terms_accepted")
+  termsAcceptedAt  DateTime? @map("terms_accepted_at")
+  marketingEmails  Boolean @default(true) @map("marketing_emails")
+
+  // Relations
+  profile       UserProfile?
+  activities    Activity[]
+  applications  Application[]
+  documents     Document[]
+  recommendations Recommendation[]
+  analytics     UserAnalytics[]
+  accessLogs    AccessLog[]
+  essayFeedback EssayFeedback[]
+
+  @@map("users")
+}
+
+model UserProfile {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Basic Info
+  firstName String?  @map("first_name")
+  lastName  String?  @map("last_name")
+  phone     String?
+  dateOfBirth DateTime? @map("date_of_birth")
+
+  // Address
+  streetAddress String? @map("street_address")
+  city          String?
+  state         String?
+  zip           String?
+  country       String? @default("United States")
+
+  // Academic Info
+  currentSchool     String?  @map("current_school")
+  schoolType        String?  @map("school_type")
+  expectedGraduation DateTime? @map("expected_graduation")
+  major             String?
+  minor             String?
+  gpa               Decimal? @db.Decimal(3, 2)
+  academicStanding  String?  @map("academic_standing")
+
+  // Demographics (optional)
+  citizenship       String?
+  ethnicity         String?
+  gender            String?
+  firstGeneration   Boolean? @map("first_generation")
+  militaryStatus    String?  @map("military_status")
+
+  // Financial
+  financialNeedIndicator String? @map("financial_need_indicator")
+
+  // Profile Narrative (Structured Sections)
+  background       String?  @db.Text
+  challenges       String?  @db.Text
+  academicJourney  String?  @db.Text @map("academic_journey")
+  careerGoals      String?  @db.Text @map("career_goals")
+  whyEducation     String?  @db.Text @map("why_education")
+  personalValues   String?  @db.Text @map("personal_values")
+
+  // Metadata
+  profileStrengthScore Int @default(0) @map("profile_strength_score")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("user_profiles")
+}
+
+model Activity {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type         String   // leadership, work, volunteer, award, skill, extracurricular
+  organization String?
+  role         String?
+  description  String?  @db.Text
+
+  startDate    DateTime? @map("start_date")
+  endDate      DateTime? @map("end_date")
+  isCurrent    Boolean @default(false) @map("is_current")
+
+  hoursPerWeek Int?     @map("hours_per_week")
+  totalHours   Int?     @map("total_hours")
+
+  achievements String[] @default([])
+
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("activities")
+}
+
+// ============================================
+// SCHOLARSHIPS
+// ============================================
+
+model Scholarship {
+  id          String   @id @default(uuid())
+
+  // Basic Info
+  name        String   @db.VarChar(500)
+  organization String?
+  description String?  @db.Text
+  missionStatement String? @db.Text @map("mission_statement")
+  url         String   @unique @db.Text
+
+  // Award Info
+  awardAmountMin Int?  @map("award_amount_min")
+  awardAmountMax Int?  @map("award_amount_max")
+  numberOfAwards Int?  @map("number_of_awards")
+  totalAwardPool Int?  @map("total_award_pool")
+  recurring      Boolean @default(false)
+
+  // Deadlines
+  deadline         DateTime
+  deadlineTimezone String @default("America/New_York") @map("deadline_timezone")
+  notificationDate DateTime? @map("notification_date")
+
+  // Eligibility (stored as JSON)
+  eligibility Json
+
+  // Application Requirements
+  essayPrompts      Json  @map("essay_prompts")
+  requiredDocuments String[] @default([]) @map("required_documents")
+  requiresRecommendations Int @default(0) @map("requires_recommendations")
+
+  // Meta-analysis
+  competitionLevel      String? @map("competition_level")
+  estimatedApplicants   Int?    @map("estimated_applicants")
+  applicationEffortScore Int?   @map("application_effort_score")
+  formComplexity        String? @map("form_complexity")
+  hasCaptcha            Boolean @default(false) @map("has_captcha")
+  isMultiStage          Boolean @default(false) @map("is_multi_stage")
+
+  // Scraping Metadata
+  source          String
+  lastScraped     DateTime? @map("last_scraped")
+  confidenceScore Decimal @default(1.0) @db.Decimal(3, 2) @map("confidence_score")
+  verified        Boolean @default(false)
+
+  // Keywords
+  keywords String[] @default([])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  applications Application[]
+
+  @@index([deadline])
+  @@index([verified])
+  @@map("scholarships")
+}
+
+// ============================================
+// APPLICATIONS
+// ============================================
+
+model Application {
+  id            String   @id @default(uuid())
+  userId        String   @map("user_id")
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scholarshipId String   @map("scholarship_id")
+  scholarship   Scholarship @relation(fields: [scholarshipId], references: [id], onDelete: Cascade)
+
+  // Status
+  status    String  // matched, draft, ready, submitted, under_review, winner, rejected, closed
+  priority  String? // high, medium, low
+  matchScore Int?   @map("match_score")
+
+  // Dates
+  startedAt   DateTime? @map("started_at")
+  submittedAt DateTime? @map("submitted_at")
+  outcomeDate DateTime? @map("outcome_date")
+
+  // Outcome
+  outcome               String? // won, rejected, pending
+  awardAmountReceived   Int?    @map("award_amount_received")
+
+  // Time tracking
+  timeSpentMinutes Int @default(0) @map("time_spent_minutes")
+
+  // Multi-stage
+  parentApplicationId String? @map("parent_application_id")
+  parentApplication   Application? @relation("ApplicationStages", fields: [parentApplicationId], references: [id])
+  childApplications   Application[] @relation("ApplicationStages")
+  stageNumber         Int @default(1) @map("stage_number")
+  totalStages         Int @default(1) @map("total_stages")
+
+  // Metadata
+  notes      String? @db.Text
+  userRating Int?    @map("user_rating")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  essays          Essay[]
+  recommendations Recommendation[]
+
+  @@unique([userId, scholarshipId])
+  @@map("applications")
+}
+
+model Essay {
+  id            String   @id @default(uuid())
+  applicationId String   @map("application_id")
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  promptText    String   @db.Text @map("prompt_text")
+  wordLimit     Int?     @map("word_limit")
+
+  // Generated content
+  generatedEssay String? @db.Text @map("generated_essay")
+  finalEssay     String? @db.Text @map("final_essay")
+
+  // Generation metadata
+  generationMethod String? @map("generation_method")
+  variantsGenerated Int @default(1) @map("variants_generated")
+  selectedVariant   Int? @map("selected_variant")
+
+  // Quality
+  qualityScore Int?    @map("quality_score")
+  wordCount    Int?    @map("word_count")
+
+  // User feedback
+  userRating      Int?    @map("user_rating")
+  userFeedback    String? @db.Text @map("user_feedback")
+  toneRating      Int?    @map("tone_rating")
+  accuracyRating  Int?    @map("accuracy_rating")
+  flowRating      Int?    @map("flow_rating")
+
+  // Tracking
+  timesEdited         Int @default(0) @map("times_edited")
+  aiDetectionScore    Decimal? @db.Decimal(3, 2) @map("ai_detection_score")
+  plagiarismScore     Decimal? @db.Decimal(3, 2) @map("plagiarism_score")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  feedback EssayFeedback[]
+
+  @@map("essays")
+}
+
+model Document {
+  id       String   @id @default(uuid())
+  userId   String   @map("user_id")
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type     String   // transcript, resume, letter_of_rec, personal_statement, etc.
+  filename String
+  fileUrl  String   @map("file_url") @db.Text
+  fileSize Int?     @map("file_size")
+  mimeType String?  @map("mime_type")
+
+  // Versions
+  isCurrent Boolean @default(true) @map("is_current")
+  version   Int @default(1)
+  replacesDocumentId String? @map("replaces_document_id")
+  replacesDocument   Document? @relation("DocumentVersions", fields: [replacesDocumentId], references: [id])
+  newerVersions      Document[] @relation("DocumentVersions")
+
+  // Parsed content
+  extractedText String? @db.Text @map("extracted_text")
+  parsedData    Json?   @map("parsed_data")
+
+  uploadedAt DateTime @default(now()) @map("uploaded_at")
+
+  // Relations
+  recommendations Recommendation[]
+
+  @@map("documents")
+}
+
+model Recommendation {
+  id            String   @id @default(uuid())
+  userId        String   @map("user_id")
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applicationId String?  @map("application_id")
+  application   Application? @relation(fields: [applicationId], references: [id])
+
+  recommenderName         String @map("recommender_name")
+  recommenderEmail        String? @map("recommender_email")
+  recommenderRelationship String @map("recommender_relationship")
+
+  status String @default("not_requested") // not_requested, requested, received, submitted
+
+  requestedAt  DateTime? @map("requested_at")
+  receivedAt   DateTime? @map("received_at")
+  submittedAt  DateTime? @map("submitted_at")
+
+  // Document
+  documentId String? @map("document_id")
+  document   Document? @relation(fields: [documentId], references: [id])
+
+  notes String? @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("recommendations")
+}
+
+// ============================================
+// ANALYTICS & TRACKING
+// ============================================
+
+model UserAnalytics {
+  id     String   @id @default(uuid())
+  userId String   @map("user_id")
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  date DateTime @db.Date
+
+  // Counts
+  applicationsStarted   Int @default(0) @map("applications_started")
+  applicationsSubmitted Int @default(0) @map("applications_submitted")
+  essaysGenerated       Int @default(0) @map("essays_generated")
+  essaysEdited          Int @default(0) @map("essays_edited")
+
+  // Time
+  totalTimeMinutes Int @default(0) @map("total_time_minutes")
+
+  // Outcomes
+  scholarshipsWon Int @default(0) @map("scholarships_won")
+  moneyWon        Int @default(0) @map("money_won")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, date])
+  @@map("user_analytics")
+}
+
+model EssayFeedback {
+  id      String   @id @default(uuid())
+  essayId String   @map("essay_id")
+  essay   Essay    @relation(fields: [essayId], references: [id], onDelete: Cascade)
+  userId  String   @map("user_id")
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  feedbackType String @map("feedback_type") // rating, comment, edit, regenerate
+
+  // Ratings
+  overallRating Int? @map("overall_rating")
+  toneRating    Int? @map("tone_rating")
+  accuracyRating Int? @map("accuracy_rating")
+  flowRating     Int? @map("flow_rating")
+
+  // Text feedback
+  comment String? @db.Text
+
+  // Edit tracking
+  originalText    String? @db.Text @map("original_text")
+  editedText      String? @db.Text @map("edited_text")
+  sectionsChanged String[] @default([]) @map("sections_changed")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("essay_feedback")
+}
+
+model ScrapingLog {
+  id     String   @id @default(uuid())
+
+  source String
+  status String // success, partial, failed
+
+  scholarshipsFound   Int @default(0) @map("scholarships_found")
+  scholarshipsNew     Int @default(0) @map("scholarships_new")
+  scholarshipsUpdated Int @default(0) @map("scholarships_updated")
+
+  errors String[] @default([])
+
+  startedAt   DateTime @default(now()) @map("started_at")
+  completedAt DateTime? @map("completed_at")
+
+  @@map("scraping_logs")
+}
+
+model AccessLog {
+  id     String   @id @default(uuid())
+  userId String?  @map("user_id")
+  user   User?    @relation(fields: [userId], references: [id])
+
+  action       String // login, view_profile, export_data, delete_account
+  resourceType String? @map("resource_type") // user, application, essay, document
+  resourceId   String? @map("resource_id")
+
+  ipAddress String? @map("ip_address")
+  userAgent String? @db.Text @map("user_agent")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("access_logs")
+}

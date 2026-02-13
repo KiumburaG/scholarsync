@@ -122,7 +122,7 @@ export function calculateMatchScore(
   }
 
   // 5. Profile Strength (10% weight)
-  factors.profileStrength = (profile.profileStrengthScore || 0) / 100;
+  factors.profileStrength = (profile.profileStrength || 0) / 100;
 
   // 6. Activity Match (15% weight)
   // Match based on tags and activity types

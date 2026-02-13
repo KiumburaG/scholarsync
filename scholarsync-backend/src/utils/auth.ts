@@ -23,12 +23,12 @@ export async function verifyPassword(password: string, hashedPassword: string): 
 
 // Generate access token
 export function generateToken(payload: TokenPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRY });
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRY as string });
 }
 
 // Generate refresh token
 export function generateRefreshToken(payload: TokenPayload): string {
-  return jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: JWT_REFRESH_EXPIRY });
+  return jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: JWT_REFRESH_EXPIRY as string });
 }
 
 // Verify access token
@@ -71,4 +71,19 @@ export function validatePassword(password: string): { valid: boolean; errors: st
 export function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
+}
+
+// Log access (stub for now - can be expanded with actual logging)
+export async function logAccess(
+  userId: string,
+  action: string,
+  resourceTypeOrData?: string | any,
+  resourceId?: string
+): Promise<void> {
+  // Handle both old signature and new object-based calls
+  if (typeof resourceTypeOrData === 'object') {
+    console.log(`[ACCESS LOG] User: ${userId}, Action: ${action}, Data:`, resourceTypeOrData);
+  } else {
+    console.log(`[ACCESS LOG] User: ${userId}, Action: ${action}, Resource: ${resourceTypeOrData}/${resourceId}`);
+  }
 }
