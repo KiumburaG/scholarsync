@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client/react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 import { MY_PROFILE_QUERY } from '@/lib/graphql/queries';
 import { isAuthenticated } from '@/lib/auth';
 import { BasicInfoStep } from '@/components/onboarding/steps/basic-info-step';
@@ -20,10 +21,11 @@ export default function EditProfilePage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>('basic');
   const [profileData, setProfileData] = useState<any>({});
-  const [originalData, setOriginalData] = useState<any>({});
   const [dataLoaded, setDataLoaded] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const componentMountedRef = useRef(true);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
+  const [dataVersion, setDataVersion] = useState(0);
 
   const { data, loading, refetch } = useQuery(MY_PROFILE_QUERY);
 
@@ -65,9 +67,9 @@ export default function EditProfilePage() {
         activities: profile.activities || [],
       };
       setProfileData(formattedData);
-      setOriginalData(formattedData);
       setDataLoaded(true);
       setHasUnsavedChanges(false);
+      setDataVersion((v) => v + 1); // Increment to force form remount
     }
   }, [data]);
 
@@ -110,29 +112,40 @@ export default function EditProfilePage() {
     await refetch();
     setHasUnsavedChanges(false);
     toast.success('Changes saved successfully!', {
+      description: 'Your profile has been updated.',
       duration: 3000,
     });
   };
 
-  const handleTabChange = (newTab: TabType) => {
+  const confirmNavigation = (action: () => void) => {
     if (hasUnsavedChanges) {
-      if (confirm('You have unsaved changes. Are you sure you want to leave this section?')) {
-        setActiveTab(newTab);
-        setHasUnsavedChanges(false);
-      }
+      setPendingAction(() => action);
+      setShowConfirmDialog(true);
     } else {
-      setActiveTab(newTab);
+      action();
     }
   };
 
-  const handleBackToDashboard = () => {
-    if (hasUnsavedChanges) {
-      if (confirm('You have unsaved changes. Are you sure you want to leave?')) {
-        router.push('/dashboard');
-      }
-    } else {
-      router.push('/dashboard');
+  const handleConfirmNavigation = () => {
+    setShowConfirmDialog(false);
+    setHasUnsavedChanges(false);
+    if (pendingAction) {
+      pendingAction();
+      setPendingAction(null);
     }
+  };
+
+  const handleCancelNavigation = () => {
+    setShowConfirmDialog(false);
+    setPendingAction(null);
+  };
+
+  const handleTabChange = (newTab: TabType) => {
+    confirmNavigation(() => setActiveTab(newTab));
+  };
+
+  const handleBackToDashboard = () => {
+    confirmNavigation(() => router.push('/dashboard'));
   };
 
   const renderTabContent = () => {
@@ -144,18 +157,20 @@ export default function EditProfilePage() {
       buttonText: 'Save Changes',
     };
 
-    // Use activeTab as key to mount fresh component when switching tabs
+    // Use dataVersion to force remount when data is refetched
+    const key = `${activeTab}-${dataVersion}`;
+
     switch (activeTab) {
       case 'basic':
-        return <BasicInfoStep key={activeTab} {...commonProps} />;
+        return <BasicInfoStep key={key} {...commonProps} />;
       case 'academic':
-        return <AcademicInfoStep key={activeTab} {...commonProps} />;
+        return <AcademicInfoStep key={key} {...commonProps} />;
       case 'experiences':
-        return <ExperiencesStep key={activeTab} {...commonProps} />;
+        return <ExperiencesStep key={key} {...commonProps} />;
       case 'narrative':
-        return <NarrativeStep key={activeTab} {...commonProps} />;
+        return <NarrativeStep key={key} {...commonProps} />;
       case 'preferences':
-        return <PreferencesStep key={activeTab} {...commonProps} />;
+        return <PreferencesStep key={key} {...commonProps} />;
       default:
         return null;
     }
@@ -164,6 +179,16 @@ export default function EditProfilePage() {
   return (
     <>
       <Toaster position="top-right" richColors />
+      <ConfirmationDialog
+        isOpen={showConfirmDialog}
+        title="Unsaved Changes"
+        message="You have unsaved changes that will be lost. Are you sure you want to leave this section?"
+        confirmText="Leave Anyway"
+        cancelText="Stay Here"
+        onConfirm={handleConfirmNavigation}
+        onCancel={handleCancelNavigation}
+        variant="warning"
+      />
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
         <header className="bg-white border-b">
@@ -178,8 +203,9 @@ export default function EditProfilePage() {
                 </Button>
                 <h1 className="text-2xl font-bold text-gray-900">Edit Profile</h1>
                 {hasUnsavedChanges && (
-                  <span className="text-sm text-orange-600 font-medium">
-                    • Unsaved changes
+                  <span className="text-sm text-orange-600 font-medium flex items-center gap-1">
+                    <span className="inline-block w-2 h-2 bg-orange-600 rounded-full animate-pulse" />
+                    Unsaved changes
                   </span>
                 )}
               </div>
