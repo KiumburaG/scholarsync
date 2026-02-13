@@ -1,10 +1,10 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret';
-const JWT_EXPIRY = process.env.JWT_EXPIRY || '1h';
-const JWT_REFRESH_EXPIRY = process.env.JWT_REFRESH_EXPIRY || '30d';
+const JWT_SECRET: string = process.env.JWT_SECRET || 'dev-secret';
+const JWT_REFRESH_SECRET: string = process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret';
+const JWT_EXPIRY: string = process.env.JWT_EXPIRY || '1h';
+const JWT_REFRESH_EXPIRY: string = process.env.JWT_REFRESH_EXPIRY || '30d';
 
 export interface TokenPayload {
   userId: string;
@@ -23,12 +23,12 @@ export async function verifyPassword(password: string, hashedPassword: string): 
 
 // Generate access token
 export function generateToken(payload: TokenPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRY as string });
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRY as jwt.SignOptions['expiresIn'] });
 }
 
 // Generate refresh token
 export function generateRefreshToken(payload: TokenPayload): string {
-  return jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: JWT_REFRESH_EXPIRY as string });
+  return jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: JWT_REFRESH_EXPIRY as jwt.SignOptions['expiresIn'] });
 }
 
 // Verify access token

@@ -69,6 +69,8 @@ export const profileResolvers = {
 
       const { input } = args;
 
+      console.log('Received input:', JSON.stringify(input, null, 2));
+
       // Validate profile data
       const validation = validateProfileData(input);
       if (!validation.valid) {
@@ -85,13 +87,19 @@ export const profileResolvers = {
         }
       });
 
+      console.log('Filtered data before date conversion:', JSON.stringify(data, null, 2));
+
       // Convert date strings to Date objects if provided
       if (data.dateOfBirth) {
         data.dateOfBirth = new Date(data.dateOfBirth);
+        console.log('Converted dateOfBirth to Date:', data.dateOfBirth);
       }
       if (data.expectedGraduation) {
         data.expectedGraduation = new Date(data.expectedGraduation);
+        console.log('Converted expectedGraduation to Date:', data.expectedGraduation);
       }
+
+      console.log('Final data to save:', JSON.stringify(data, null, 2));
 
       // Get current profile to calculate strength
       const currentProfile = await prisma.userProfile.findUnique({

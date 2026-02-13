@@ -77,6 +77,8 @@ export function BasicInfoStep({ data, updateData, onNext, buttonText = 'Next: Ac
   const onSubmit = (formData: BasicInfoFormData) => {
     setError('');
 
+    console.log('Form data received:', formData);
+
     // Filter out empty strings to prevent overwriting with null values
     const cleanedData = Object.entries(formData).reduce((acc, [key, value]) => {
       if (value !== '' && value !== null && value !== undefined) {
@@ -84,6 +86,8 @@ export function BasicInfoStep({ data, updateData, onNext, buttonText = 'Next: Ac
       }
       return acc;
     }, {} as any);
+
+    console.log('Cleaned data to send:', cleanedData);
 
     updateData(cleanedData);
 

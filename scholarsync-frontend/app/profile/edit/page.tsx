@@ -39,16 +39,29 @@ export default function EditProfilePage() {
     if (data?.myProfile) {
       const profile = data.myProfile;
 
+      console.log('Profile data from server:', {
+        dateOfBirth: profile.dateOfBirth,
+        expectedGraduation: profile.expectedGraduation
+      });
+
       // Helper function to convert ISO date to YYYY-MM-DD format
       const formatDateForInput = (isoDate: string | null) => {
         if (!isoDate) return '';
         try {
+          // If already in YYYY-MM-DD format, return as is
+          if (typeof isoDate === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(isoDate)) {
+            return isoDate;
+          }
+          // Otherwise parse and format using UTC to avoid timezone shifts
           const date = new Date(isoDate);
-          const year = date.getFullYear();
-          const month = String(date.getMonth() + 1).padStart(2, '0');
-          const day = String(date.getDate()).padStart(2, '0');
-          return `${year}-${month}-${day}`;
-        } catch {
+          const year = date.getUTCFullYear();
+          const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+          const day = String(date.getUTCDate()).padStart(2, '0');
+          const formatted = `${year}-${month}-${day}`;
+          console.log(`Formatted date: ${isoDate} -> ${formatted}`);
+          return formatted;
+        } catch (e) {
+          console.error('Error formatting date:', isoDate, e);
           return '';
         }
       };
@@ -81,6 +94,12 @@ export default function EditProfilePage() {
         personalValues: profile.personalValues || '',
         activities: profile.activities || [],
       };
+
+      console.log('Formatted profile data:', {
+        dateOfBirth: formattedData.dateOfBirth,
+        expectedGraduation: formattedData.expectedGraduation
+      });
+
       setProfileData(formattedData);
       setDataLoaded(true);
       setHasUnsavedChanges(false);
