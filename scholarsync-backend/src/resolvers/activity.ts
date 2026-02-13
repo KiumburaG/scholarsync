@@ -33,11 +33,21 @@ export const activityResolvers = {
         data.isCurrent = false;
       }
 
+      // Get user's profile
+      const userProfile = await prisma.userProfile.findUnique({
+        where: { userId: context.userId },
+      });
+
+      if (!userProfile) {
+        throw new Error('User profile not found');
+      }
+
       // Create activity
       const activity = await prisma.activity.create({
         data: {
           ...data,
           userId: context.userId,
+          userProfileId: userProfile.id,
           achievements: input.achievements || [],
         },
       });
