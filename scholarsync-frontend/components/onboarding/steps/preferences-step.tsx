@@ -21,7 +21,7 @@ export function PreferencesStep({ data, updateData, onNext, onBack }: Props) {
   const { data: profileData, loading } = useQuery(MY_PROFILE_QUERY);
 
   const profile = profileData?.myProfile;
-  const profileStrength = profile?.profileStrengthScore || 0;
+  const profileStrength = profile?.profileStrength || 0;
 
   const handleComplete = () => {
     router.push('/dashboard');

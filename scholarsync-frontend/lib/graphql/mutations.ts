@@ -59,7 +59,6 @@ export const UPDATE_PROFILE_MUTATION = gql`
       zip
       country
       currentSchool
-      schoolType
       expectedGraduation
       major
       minor
@@ -69,15 +68,13 @@ export const UPDATE_PROFILE_MUTATION = gql`
       ethnicity
       gender
       firstGeneration
-      militaryStatus
-      financialNeedIndicator
       background
       challenges
       academicJourney
       careerGoals
       whyEducation
       personalValues
-      profileStrengthScore
+      profileStrength
       updatedAt
     }
   }
@@ -95,7 +92,6 @@ export const CREATE_ACTIVITY_MUTATION = gql`
       endDate
       isCurrent
       hoursPerWeek
-      totalHours
       achievements
       createdAt
       updatedAt

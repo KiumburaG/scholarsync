@@ -29,9 +29,10 @@ interface Props {
   data: OnboardingData;
   updateData: (data: Partial<OnboardingData>) => void;
   onNext: () => void;
+  buttonText?: string;
 }
 
-export function BasicInfoStep({ data, updateData, onNext }: Props) {
+export function BasicInfoStep({ data, updateData, onNext, buttonText = 'Next: Academic Info' }: Props) {
   const [error, setError] = useState('');
 
   const { register, handleSubmit, formState: { errors } } = useForm<BasicInfoFormData>({
@@ -158,7 +159,7 @@ export function BasicInfoStep({ data, updateData, onNext }: Props) {
       <div className="flex justify-between pt-4">
         <div></div>
         <Button type="submit" disabled={loading}>
-          {loading ? 'Saving...' : 'Next: Academic Info'}
+          {loading ? 'Saving...' : buttonText}
         </Button>
       </div>
     </form>

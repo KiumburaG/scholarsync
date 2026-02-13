@@ -28,9 +28,10 @@ interface Props {
   updateData: (data: Partial<OnboardingData>) => void;
   onNext: () => void;
   onBack: () => void;
+  buttonText?: string;
 }
 
-export function AcademicInfoStep({ data, updateData, onNext, onBack }: Props) {
+export function AcademicInfoStep({ data, updateData, onNext, onBack, buttonText = 'Next: Experiences' }: Props) {
   const [error, setError] = useState('');
   const [academicStanding, setAcademicStanding] = useState(data.academicStanding || '');
 
@@ -157,7 +158,7 @@ export function AcademicInfoStep({ data, updateData, onNext, onBack }: Props) {
           Back
         </Button>
         <Button type="submit" disabled={loading}>
-          {loading ? 'Saving...' : 'Next: Experiences'}
+          {loading ? 'Saving...' : buttonText}
         </Button>
       </div>
     </form>

@@ -97,6 +97,7 @@ export default function EditProfilePage() {
       updateData,
       onNext: handleSave,
       onBack: () => router.push('/dashboard'),
+      buttonText: 'Save Changes',
     };
 
     // Use key prop with activeTab to force remount when switching tabs

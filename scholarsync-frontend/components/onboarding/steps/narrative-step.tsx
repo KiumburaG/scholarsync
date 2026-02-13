@@ -23,9 +23,10 @@ interface Props {
   updateData: (data: Partial<OnboardingData>) => void;
   onNext: () => void;
   onBack: () => void;
+  buttonText?: string;
 }
 
-export function NarrativeStep({ data, updateData, onNext, onBack }: Props) {
+export function NarrativeStep({ data, updateData, onNext, onBack, buttonText = 'Next: Preferences' }: Props) {
   const [error, setError] = useState('');
 
   const { register, handleSubmit, watch } = useForm<NarrativeFormData>({
@@ -155,7 +156,7 @@ export function NarrativeStep({ data, updateData, onNext, onBack }: Props) {
           Back
         </Button>
         <Button type="submit" disabled={loading}>
-          {loading ? 'Saving...' : 'Next: Preferences'}
+          {loading ? 'Saving...' : buttonText}
         </Button>
       </div>
     </form>

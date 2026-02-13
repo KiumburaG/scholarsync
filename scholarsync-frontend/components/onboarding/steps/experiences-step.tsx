@@ -17,9 +17,10 @@ interface Props {
   updateData: (data: Partial<OnboardingData>) => void;
   onNext: () => void;
   onBack: () => void;
+  buttonText?: string;
 }
 
-export function ExperiencesStep({ data, updateData, onNext, onBack }: Props) {
+export function ExperiencesStep({ data, updateData, onNext, onBack, buttonText = 'Next: Your Story' }: Props) {
   const [showAddForm, setShowAddForm] = useState(false);
   const [error, setError] = useState('');
 
@@ -284,7 +285,7 @@ export function ExperiencesStep({ data, updateData, onNext, onBack }: Props) {
           Back
         </Button>
         <Button type="button" onClick={onNext}>
-          Next: Your Story
+          {buttonText}
         </Button>
       </div>
     </div>
