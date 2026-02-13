@@ -38,18 +38,33 @@ export default function EditProfilePage() {
   useEffect(() => {
     if (data?.myProfile) {
       const profile = data.myProfile;
+
+      // Helper function to convert ISO date to YYYY-MM-DD format
+      const formatDateForInput = (isoDate: string | null) => {
+        if (!isoDate) return '';
+        try {
+          const date = new Date(isoDate);
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          return `${year}-${month}-${day}`;
+        } catch {
+          return '';
+        }
+      };
+
       const formattedData = {
         firstName: profile.firstName || '',
         lastName: profile.lastName || '',
         phone: profile.phone || '',
-        dateOfBirth: profile.dateOfBirth || '',
+        dateOfBirth: formatDateForInput(profile.dateOfBirth),
         streetAddress: profile.streetAddress || '',
         city: profile.city || '',
         state: profile.state || '',
         zip: profile.zip || '',
         country: profile.country || 'United States',
         currentSchool: profile.currentSchool || '',
-        expectedGraduation: profile.expectedGraduation || '',
+        expectedGraduation: formatDateForInput(profile.expectedGraduation),
         major: profile.major || '',
         minor: profile.minor || '',
         gpa: profile.gpa || undefined,
