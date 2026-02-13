@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card } from '@/components/ui/card';
-import { CREATE_ACTIVITY_MUTATION, DELETE_ACTIVITY_MUTATION } from '@/lib/graphql/mutations';
+import { CREATE_ACTIVITY_MUTATION, DELETE_ACTIVITY_MUTATION, UPDATE_ACTIVITY_MUTATION } from '@/lib/graphql/mutations';
 import { MY_ACTIVITIES_QUERY } from '@/lib/graphql/queries';
 import { OnboardingData } from '../onboarding-wizard';
 
@@ -22,6 +22,7 @@ interface Props {
 
 export function ExperiencesStep({ data, updateData, onNext, onBack, buttonText = 'Next: Your Story' }: Props) {
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [error, setError] = useState('');
 
   // Form state
@@ -53,6 +54,18 @@ export function ExperiencesStep({ data, updateData, onNext, onBack, buttonText =
     },
   });
 
+  const [updateActivity, { loading: updating }] = useMutation(UPDATE_ACTIVITY_MUTATION, {
+    onCompleted: () => {
+      refetch();
+      setEditingId(null);
+      setShowAddForm(false);
+      resetForm();
+    },
+    onError: (error) => {
+      setError(error.message);
+    },
+  });
+
   const resetForm = () => {
     setType('leadership');
     setOrganization('');
@@ -62,9 +75,38 @@ export function ExperiencesStep({ data, updateData, onNext, onBack, buttonText =
     setEndDate('');
     setIsCurrent(false);
     setHoursPerWeek('');
+    setEditingId(null);
   };
 
-  const handleAddActivity = () => {
+  const handleEdit = (activity: any) => {
+    setEditingId(activity.id);
+    setType(activity.type);
+    setOrganization(activity.organization || '');
+    setRole(activity.role || '');
+    setDescription(activity.description || '');
+
+    // Format dates from ISO to YYYY-MM-DD
+    const formatDate = (isoDate: string | null) => {
+      if (!isoDate) return '';
+      try {
+        const date = new Date(isoDate);
+        const year = date.getUTCFullYear();
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(date.getUTCDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      } catch {
+        return '';
+      }
+    };
+
+    setStartDate(formatDate(activity.startDate));
+    setEndDate(formatDate(activity.endDate));
+    setIsCurrent(activity.isCurrent || false);
+    setHoursPerWeek(activity.hoursPerWeek ? String(activity.hoursPerWeek) : '');
+    setShowAddForm(true);
+  };
+
+  const handleSaveActivity = () => {
     setError('');
 
     if (!organization || !role) {
@@ -72,20 +114,33 @@ export function ExperiencesStep({ data, updateData, onNext, onBack, buttonText =
       return;
     }
 
-    createActivity({
-      variables: {
-        input: {
-          type,
-          organization,
-          role,
-          description: description || undefined,
-          startDate: startDate || undefined,
-          endDate: !isCurrent && endDate ? endDate : undefined,
-          isCurrent,
-          hoursPerWeek: hoursPerWeek ? parseInt(hoursPerWeek) : undefined,
+    const input = {
+      type,
+      organization,
+      role,
+      description: description || undefined,
+      startDate: startDate || undefined,
+      endDate: !isCurrent && endDate ? endDate : undefined,
+      isCurrent,
+      hoursPerWeek: hoursPerWeek ? parseInt(hoursPerWeek) : undefined,
+    };
+
+    if (editingId) {
+      // Update existing activity
+      updateActivity({
+        variables: {
+          id: editingId,
+          input,
         },
-      },
-    });
+      });
+    } else {
+      // Create new activity
+      createActivity({
+        variables: {
+          input,
+        },
+      });
+    }
   };
 
   const handleDelete = (id: string) => {
@@ -124,14 +179,24 @@ export function ExperiencesStep({ data, updateData, onNext, onBack, buttonText =
                       <p className="text-sm text-gray-500 mt-1">{activity.description}</p>
                     )}
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDelete(activity.id)}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                  >
-                    Remove
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleEdit(activity)}
+                      className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDelete(activity.id)}
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                    >
+                      Remove
+                    </Button>
+                  </div>
                 </div>
               </Card>
             ))}
@@ -150,9 +215,12 @@ export function ExperiencesStep({ data, updateData, onNext, onBack, buttonText =
           </Button>
         )}
 
-        {/* Add Activity Form */}
+        {/* Add/Edit Activity Form */}
         {showAddForm && (
           <Card className="p-4 space-y-4">
+            <h3 className="font-semibold text-lg mb-2">
+              {editingId ? 'Edit Activity' : 'Add Activity'}
+            </h3>
             <div className="space-y-2">
               <Label htmlFor="type">Activity Type *</Label>
               <Select value={type} onValueChange={setType}>
@@ -269,11 +337,11 @@ export function ExperiencesStep({ data, updateData, onNext, onBack, buttonText =
               </Button>
               <Button
                 type="button"
-                onClick={handleAddActivity}
-                disabled={creating}
+                onClick={handleSaveActivity}
+                disabled={creating || updating}
                 className="flex-1"
               >
-                {creating ? 'Adding...' : 'Add Activity'}
+                {creating || updating ? 'Saving...' : editingId ? 'Update Activity' : 'Add Activity'}
               </Button>
             </div>
           </Card>
